@@ -1,0 +1,40 @@
+<h2><{if $value}><{$value}><{else}>Tekstas<{/if}><input type="hidden" name="<{$id}>_value" id="<{$id}>_value" value="<{if $value}><{$value}><{else}>Tekstas<{/if}>" /></h2>
+<script type="text/javascript">
+	//<![CDATA[
+		jQuery(function () {
+			function hover() {
+				if (window.control_magic_selector) {
+					window.control_magic_selector.blur();
+				}
+				var oldObj = jQuery('#<{$id}> h2');
+				var newObj = jQuery('<textarea cols="5" rows="5" name="<{$id}>_value" id="<{$id}>_value">' + oldObj.text() + '</textarea>');
+				newObj.css({width:oldObj.width(), height:oldObj.height(), 'border-style':'solid', 'border-width':'1px', 'border-color':'#9999CC', 'font-size':oldObj.css('font-size'), 'font-family':oldObj.css('font-family'), 'padding':oldObj.css('padding'), 'margin':oldObj.css('margin')});
+				oldObj.replaceWith(newObj);
+				newObj.focus();
+				window.control_magic_selector = newObj;
+				newObj.blur(blur);
+				newObj.keypress(
+					function () {
+						setTimeout(function () {
+							var cObj = jQuery('#<{$id}> textarea');
+							if (cObj.val().length < 3)	return;
+							var hObj = jQuery('<h2>' + cObj.val() + '</h2>');
+							hObj.css({visibility: 'hidden'})
+							cObj.parent().append(hObj);
+							cObj.css({width:hObj.width(), height:hObj.height()});
+							hObj.remove();
+						}, 200);
+					}
+				);
+			}
+			function blur() {
+				var oldObj = jQuery('#<{$id}> textarea');
+				var newObj = jQuery('<h2>' + oldObj.val() + '<input type="hidden" name="<{$id}>_value" id="<{$id}>_value" value="' + oldObj.val() + '" /></h2>');
+				newObj.css({width:oldObj.width(), height:oldObj.height()});
+				oldObj.replaceWith(newObj);
+				newObj.hover(hover);
+			}
+			jQuery('#<{$id}> h2').hover(hover);
+		});
+	//]]>
+</script>

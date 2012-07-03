@@ -1,0 +1,16 @@
+<{if !$control_isUpdate}>
+<script type="text/javascript">
+	//<![CDATA[
+	function control_<{$id}>_getUpdateArgs() {
+		if (!window['<{$id}>'] || !window['<{$id}>'].params || !window['<{$id}>'].params.ids) {
+			return [];
+		}
+		var rez = {};
+		var obj = jQuery('#' + window['<{$id}>'].params.ids);
+		rez['url'] = obj.find('input').val();
+		return rez;
+	}
+	//]]>
+</script>
+<{/if}>
+<{include file="ce_status.html"}>

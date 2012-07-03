@@ -1,0 +1,17 @@
+<{control name="form" method="ajax" action="save_object" ids=$id}>
+	<{control name="magic_text" value=$item.question.title id="question" /}>
+	<{control name="sortable_area" id="answers_area"}>	
+		<{foreach from=$item.answer item=answer}>
+			<{control name="magic_radio" value=$answer.title /}>
+		<{/foreach}>
+	<{/control}>
+	<{control name="control_adder" control="magic_radio" place="answers_area" /}>
+	<div>
+	<br />
+	<{if $item.vote_count > 0}>
+		<div class="error">Įspėjimas: Išsaugoti šios apklausos jau nebegalite, nes jau yra balsavusių.</div>
+	<{else}>
+	<button type="submit">Išsaugoti</button>
+	<{/if}>
+	</div>
+<{/control}>

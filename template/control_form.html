@@ -1,0 +1,86 @@
+<{if !$control_isUpdate}>
+	<{if $method=='ajax'}>
+		<script type="text/javascript">
+			//<![CDATA[
+			function control_<{$id}>_submit(e) {
+				e.preventDefault();
+				var form = jQuery('#<{$id}>_form');
+				var data = {};
+				data.data = {};
+				jQuery('#<{$id}>_form :input').each(function() {
+					if (this.name) {
+						var lx = '_value';
+						var ln = this.name;
+						if (ln.substr(ln.length - lx.length) == lx) {
+							ln = ln.substr(0, ln.length - lx.length);
+						}
+						var sobj = jQuery(this);
+						var type = sobj.attr('type');
+						if (!( ((type == 'radio') || (type == 'checkbox')) && (!sobj.attr('checked'))) ) {
+							data.data[ln] = {value:sobj.val(), node:sobj.get(0).nodeName, type:type};	
+						}						
+					}		  
+			    });		
+				data.control = <{if !$ids}>null<{else}>window.<{$ids}>.params<{/if}>;
+				function show_message(message, type) {
+					var error = jQuery('<div class="' + type + '"></div>');
+					var form = jQuery('#<{$id}> form');
+					error.css({opacity:0});
+					error.html(message);
+					form.append(error);
+					error.coolHideCode = function () {
+						error.animate({opacity:0}, function() {error.css({'display':'none'}); error.remove();} );
+					}
+					error.coolHide = function () {
+						setTimeout(error.coolHideCode, 20000);
+					}
+					error.animate({opacity:1}, error.coolHide);
+				}
+				function show_error(message) {
+					show_message('Klaida: ' + message, 'error');
+				}
+				function show_success(message) {
+					show_message(message, 'success');
+				}
+				var params = window.<{$id}>.params;
+				var url = 'index.php?' + params.control_type;
+				var tparams = {control_type:params.control_type, control_action:'submit', control_data:params.control_data, control_params:[data]};
+				var processor =	function (result, textStatus, XMLHttpRequest) {
+						if (!result) {
+							return show_error('Nepavyko nusiųsti/apdoroti duomenų!');
+						} 
+						if (result.errors.length > 0) {
+							for(var i=0; i < result.errors.length; i++) {
+								show_error(result.errors[i]);
+							}
+							return;
+						}
+						<{if $ids}>
+							window.<{$ids}>.params = result.control;
+						<{/if}>						
+						show_success('Išsaugota.');
+						if (result.js.length > 0) {
+							for(var i=0; i < result.js.length; i++) {
+								eval(result.js[i]);
+							}
+							return;
+						}
+					};
+				jQuery.post(url, tparams, processor, 'json');
+				return false;
+			}
+			jQuery(
+				function () {
+					var form = jQuery('#<{$id}>_form');
+					form.submit(control_<{$id}>_submit);
+				}
+			);
+			//]]>
+		</script>
+		<form method="get" action="" id="<{$id}>_form">
+	<{else}>
+		<form method="<{$method}>" action="<{$action}>" id="<{$id}>">
+	<{/if}>
+	<{$content}>
+	</form>
+<{/if}>

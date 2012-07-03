@@ -1,0 +1,126 @@
+<{* control name="form" method="ajax" action="install.php" *}>
+<{control name="wizard" title="Įdiegimas"}>
+	<{control name="wizard_step"}>
+		Ši apklausų sistema kol kas negali veikti, nes yra neįdiegta. Nenusiminkite! Atlikite šio vedlio veiksmus ir galėsite ja naudotis!
+	<{/control}>
+	<{control name="wizard_step" validator_id="cfw"}>
+		Patikrinkite, ar gerai nustatytas puslapio adresas:
+		<{control name="form_text" fname="weburl" id="weburl" value=$smarty.const.CFG_URL}>
+			Puslapio adresas:
+		<{/control}>
+		<table border="0">
+			<tr>
+				<td>
+					<{control name="check_web_url" id="cfw" ids="weburl" /}>
+				</td>
+				<td>
+					adresas tinkamas, tinklalapio darbui
+				</td>
+			</tr>
+		</table>
+	<{/control}>
+	<{control name="wizard_step" validator_id="cfd"}>
+		<div>Suveskite informaciją apie šiai aplinkacijai skirtą duomenų bazę.</div>
+		<{control name="form_text" fname="dbtype" id="dbtype" value="mysql" readonly="true"}>
+			Duomenų bazės tipas:
+		<{/control}>
+		<{control name="form_text" fname="dbname" id="dbname" value=$smarty.const.CFG_DB_NAME}>
+			Duomenų bazės pavadinimas:
+		<{/control}>
+		<{control name="form_text" fname="dbuser" id="dbuser" value=$smarty.const.CFG_DB_USER}>
+			Duomenų bazės vartotojo vardas:
+		<{/control}>
+		<{control name="form_password" fname="dbpass" id="dbpass" value=$smarty.const.CFG_DB_PASS}>
+			Duomenų bazės vartotojo slaptažodis:
+		<{/control}>
+		<{control name="form_text" fname="dbhost" value="localhost" id="dbhost" value=$smarty.const.CFG_DB_HOST}>
+			Duomenų bazės serveris:
+		<{/control}>
+		<table border="0">
+			<tr>
+				<td>
+					<{control name="check_db_connection" id="cfd" ids="dbtype,dbname,dbuser,dbpass,dbhost" /}>
+				</td>
+				<td>
+					duomenys yra tinkami 
+				</td>
+			</tr>
+		</table>
+	<{/control}>
+	<{control name="wizard_step" validator_id="cun"}>
+		<p>Dabar metas įvesti administratoriaus prisijungimus :)</p>
+		<{control name="form_text" fname="username" id="username"}>
+			Vartotojas vardas:
+		<{/control}>
+		<{control name="form_password" fname="password1" id="password1"}>
+			Slaptažodis:
+		<{/control}>
+		<{control name="form_password" fname="password2" id="password2"}>
+			Pakartokite slaptažodį:
+		<{/control}>
+		<table border="0">
+			<tr>
+				<td>
+					<{control name="check_userdata" id="cun" ids="username,password1,password2" /}>
+				</td>
+				<td>
+					Vartotojo vardas bei slaptažodis yra tinkami
+				</td>
+			</tr>		
+		</table>
+		<p>Vartojo vardas turi būti sudarytas ne iš mažiau kaip dviejų simbolių. Slaptažodžiai turi sutapti.</p>
+	<{/control}>
+	<{control name="wizard_step" validator_id="cfp"}>
+		<table border="0">
+			<tr>
+				<td>
+					<{control name="check_file_permmissions" needed="rwf" id="cfp" file="config.php" /}>
+				</td>
+				<td>
+					<i>config.php</i> failas gali būti tiek skaitomas tiek ir rašomas
+				</td>
+			</tr>
+		</table>
+		<p>Jei rodomas raudonas kvadratukas, įsitikinkite, ar failą galima ir skaityti ir rašyti (linux'e chmod 777 išesmės tai turėtų išspręsti).</p>
+	<{/control}>
+	<{control name="wizard_step" validator_id="cdp"}>
+		<table border="0">
+			<tr>
+				<td>
+					<{control name="check_file_permmissions" needed="rwd" id="cdp" file="cache" /}>
+				</td>
+				<td>
+					<i>cache</i> katalogas gali būti tiek skaitomas tiek ir rašomas
+				</td>
+			</tr>
+		</table>
+		<p>Jei rodomas raudonas kvadratukas, įsitikinkite, ar failą galima ir skaityti ir rašyti (linux'e chmod 777 išesmės tai turėtų išspręsti).</p>
+	<{/control}>
+	<{control name="wizard_step" validator_id="wpb" disable_back="true" automove="true"}>
+		<p>Prašome palaukti kol bus apklausų sistema bus įdiegta.</p>
+		<{control name="progress_bar" id="wpb" action="install"}>
+			<{control name="progress_bar_step" step="save_config" ids="dbtype,dbname,dbuser,dbpass,dbhost,weburl" /}>
+			<{control name="progress_bar_step" step="create_tables" /}>
+			<{control name="progress_bar_step" step="save_user" ids="username,password1" /}>			
+		<{/control}>
+	<{/control}>
+	<{control name="wizard_step" validator_id="cfp2"}>
+		<table border="0">
+			<tr>
+				<td>
+					<{control name="check_file_permmissions" needed="rfv" id="cfp2" file="config.php" /}>
+				</td>
+				<td>
+					<i>config.php</i> failas gali būti tik skaitomas
+				</td>
+			</tr>
+		</table>
+		<p>Jei rodomas raudonas kvadratukas, įsitikinkite, ar failą galima tik skaityti (linux'e chmod 655 išesmės tai turėtų išspręsti).</p>
+	<{/control}>
+	<{control name="wizard_step" hidebuttons="true"}>
+		Apklausų sistema jau įdiegta. <p>
+		Greitai galėsite pradėti dirbti...</p>
+		<{control name="reload_page" time="5" href="index.php" /}>
+	<{/control}>
+<{/control}>
+<{* /control *}>

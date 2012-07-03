@@ -1,0 +1,14 @@
+<{if !$control_isUpdate}>
+<script type="text/javascript">
+	//<![CDATA[
+	function control_<{$id}>_add() {
+		if (!window.control_current_pbar) {
+			setTimeout(control_<{$id}>_add, 500);
+			return;
+		}
+		window.control_current_pbar.addTask('<{$id}>');
+	};
+	control_<{$id}>_add();
+	//]]>
+</script>
+<{/if}>

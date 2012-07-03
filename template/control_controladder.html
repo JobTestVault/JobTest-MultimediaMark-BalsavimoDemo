@@ -1,0 +1,24 @@
+<{if $control_isUpdate}>
+	<{control name=$control /}>
+<{else}>
+	<button type="button">Pridėti atsakymą</button>
+	<script type="text/javascript">
+		//<![CDATA[
+			jQuery(function() {
+				jQuery('#<{$id}> button').click(
+					function () {
+						var params = window.<{$id}>.params;
+						jQuery.post('index.php?' + params.control_type, 
+							{control_type:params.control_type, control_action:'add', control_data:params.control_data},
+							function(result) { 
+								if (!result) return;
+								var place = jQuery('#<{$place}>');
+								place.append(result.control_output);
+							}, 'json'
+						);
+					}
+				);
+			});
+		//]]>
+	</script>
+<{/if}>

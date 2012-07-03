@@ -1,0 +1,28 @@
+<{if !$control_isUpdate}>
+	<!--[if IE]><script language="javascript" type="text/javascript" src="<{$smarty.const.CFG_URL}>lib/jquery/jqplot/excanvas.js"></script><![endif]-->
+	<script type="text/javascript" src="<{$smarty.const.CFG_URL}>lib/jquery/jqplot/jquery.jqplot.min.js"></script>	
+	<script type="text/javascript" src="<{$smarty.const.CFG_URL}>lib/jquery/jqplot/plugins/jqplot.<{$type}>Renderer.js"></script>
+	<script type="text/javascript">
+	//<![CDATA[
+	jQuery(
+		function () {
+			jQuery("head").append('<link rel="stylesheet" type="text/css" media="all" href="<{$smarty.const.CFG_URL}>lib/jquery/jqplot/jquery.jqplot.css" />');
+		}
+	);
+	//]]>
+	</script>
+<{/if}>
+<script type="text/javascript">
+	//<![CDATA[
+	jQuery(
+		function () {
+			var line = <{$data}>;
+			var plot = jQuery.jqplot('<{$id}>_content', [line], {
+			    seriesDefaults:{renderer:jQuery.jqplot.<{$type|ucfirst}>Renderer, rendererOptions:{sliceMargin:8}},
+			    legend:{show:true}
+			});	
+		}
+	);
+	//]]>
+</script>
+<div id="<{$id}>_content" class="control_graph_content"></div>

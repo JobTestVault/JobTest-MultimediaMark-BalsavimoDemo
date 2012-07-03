@@ -1,0 +1,46 @@
+<{if $loged}>
+	<p>Labas <{$username}>!, <br />
+	Dėkui, kad prisijungei!</p>
+	<{control name="reload_page" time="5" href="index.php?area=admin" /}>
+<{else}>
+	<{if $wasError}>
+		<script type="text/javascript">
+			//<![CDATA[
+				var error = jQuery('<div class="error">Klaida: blogi prisijungimo duomenys!</div>');
+				error.css({opacity:0});
+				jQuery('#<{$id}>').append(error);
+				error.animate({opacity:1},
+							 function() {
+								setTimeout(function() {
+									error.animate({opacity:1},
+										function () {
+											error.remove();
+										}
+									);
+								}, 60000);
+							 });
+			//]]>
+		</script>
+	<{/if}>
+	<{if !$control_isUpdate}>
+		<script type="text/javascript">
+		//<![CDATA[
+		function control_<{$id}>_getData() {
+			var rez = {};
+			rez.username = jQuery('#username').find('input').val();
+			rez.password = jQuery('#password').find('input').val();
+			return rez;
+		}
+		//]]>
+		</script>
+	<{/if}>
+	<{control name="form_text" fname="username" id="username"}>
+		Vartotojas vardas:
+	<{/control}>
+	<{control name="form_password" fname="password" id="password"}>
+		Slaptažodis:
+	<{/control}>
+	<p>
+		<button type="button" onclick="window.<{$id}>.execFunc('login', control_<{$id}>_getData); return false;">Prisijungti</button>
+	</p>
+<{/if}>

@@ -1,0 +1,17 @@
+<{if $mode == 'normal'}>
+	<a href="" onclick="window.<{$id}>.execFunc('beginDownload'); return false;">Spauskite čia, norėdami atsisiųsti šios svetainės archyvą.</a>
+<{elseif $mode == 'begin'}>	
+	<div>Palaukite kol asmeninis archyvas su šia svetaine bus sugeneruotas.</div>
+	<{control name="comet_log" ids=$id action="makeArchive" }>
+		Pradedamas archyvo sukūrimas...
+	<{/control}>
+<{elseif $mode == 'try'}>
+	<a href="<{$file}>">Jei atsisiuntimas neprasidėjo automatiškai, paspauskite šią nuorodą.</a>
+	<script type="text/javascript">
+		jQuery(
+			function() {
+				window.location = jQuery('#<{$id}> a').attr('href');
+			}
+		);
+	</script>
+<{/if}>

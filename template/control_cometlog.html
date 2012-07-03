@@ -1,0 +1,58 @@
+<div style="width: 100%; height: 400px; display: block; overflow: auto; border-style: solid; border-width: 1px; border-color: gray;" id="<{$id}>_container">
+	<table border="0">
+		<tr>
+			<td colspan="2"><{$content}></td>
+		</tr>
+	</table>
+</div>
+	<script type="text/javascript">
+	//<![CDATA[
+	 function <{$id}>_updateView() {
+		if (!window.<{$id}> || !window.<{$id}>.params) 	{
+			setTimeout(<{$id}>_updateView, 500);
+			return;
+		}
+		var params = window.<{$id}>.params;
+		var url = 'index.php?' + params.control_type;
+		var data = {};
+		data.control = <{if !$ids}>null<{else}>window.<{$ids}>.params<{/if}>;
+		var tparams = {control_type:params.control_type, control_action:'updateView', control_data:params.control_data, control_params:[data]};
+		var show_msg = function (msg) {
+			var now = new Date();
+			var hour        = now.getHours();
+			var minute      = now.getMinutes();
+			var second      = now.getSeconds();
+			if (minute < 10) minute = '0' + minute;
+			if (second < 10) second = '0' + second;
+			var text = jQuery('<tr><th style="vertical-align: top;">[' + hour + ':' + minute + ':' + second + ']</th><td>' + msg.replace(/  /, ' &nbsp;') + '</td></tr>');
+			var parent = jQuery('#<{$id}>_container');
+			parent.find('table').append(text);
+			setTimeout(function () {				
+				var parent = jQuery('#<{$id}>_container');
+				parent.scrollTop(parent[0].scrollHeight);
+//				parent.css({ scrollTop: parent.attr('scrollHeight') });
+			}, 500);
+		}
+		var processor =	function (result, textStatus, XMLHttpRequest) {
+			if (!result || !result.msg) {
+				<{$id}>_updateView();
+				return;
+			}
+			if (result.msg.length > 0) {
+				for(var i=0; i < result.msg.length; i++) {
+					show_msg(result.msg[i]);
+				}
+			}			
+			if (result.js.length > 0) {
+				for(var i=0; i < result.js.length; i++) {
+					eval(result.js[i]);
+				}
+				return;
+			}				
+			<{$id}>_updateView();
+		}
+		jQuery.post(url, tparams, processor, 'json');			
+	}
+	jQuery(<{$id}>_updateView);
+	//]]>
+	</script>

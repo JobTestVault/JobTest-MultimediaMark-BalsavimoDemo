@@ -1,0 +1,11 @@
+<{if $exists}>
+	<button type="button" onclick="if(confirm('Ar tikrai norite ištrinti?')) window.<{$id}>.execFunc('delete');">Ištrinti</button>
+<{else}>
+	<script type="text/javascript">
+		if (window.<{$ids}> && window.<{$ids}>.execFunc) {
+			window.<{$ids}>.execFunc('update');
+		} else {
+			window.location.reload();
+		}
+	</script>
+<{/if}>

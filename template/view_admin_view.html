@@ -1,0 +1,8 @@
+<div id="content">
+	<{include file="ce_menu.html" selected="admin"}>
+	<div class="tab_data">
+		<a href="<{$smarty.const.CFG_URL}>?area=admin" class="logout">Grįžti atgal</a><br />
+		<p>Taip atrodo apklausos rezultatai.</p>
+		<{control name="vote_results" question_id=$smarty.request.question_id / }>
+	</div>
+</div>

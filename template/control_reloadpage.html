@@ -1,0 +1,22 @@
+<script type="text/javascript">
+	//<![CDATA[
+		jQuery(
+			function () {
+				var timer = setInterval(function() {					
+					var obj = jQuery('#<{$id}>_time');
+					if (obj.is(':hidden')) return;
+					if (!obj.text()) return;
+					var time = parseInt(obj.text());
+					if (time < 1) {
+						clearInterval(timer);
+						var url = jQuery('#<{$id}> a').attr('href');
+						window.location.replace(url);
+						return;
+					}
+					obj.text(--time);
+				}, 1000);
+			}
+		);
+	//]]>
+</script>
+<a href="<{$href}>">Puslapis bus perkrautas po <span id="<{$id}>_time"><{$time}></span> sekundžių.</a>

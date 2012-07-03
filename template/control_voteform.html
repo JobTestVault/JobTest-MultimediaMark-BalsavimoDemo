@@ -1,0 +1,17 @@
+<{if $vote}>
+  <{if $showResults}>
+	  <{control name="vote_results" question_id=$vote.question_id / }>
+  <{else}>
+	  <{control name="form" method="ajax" action="vote" ids=$id}>
+		  <h3><{$vote.title}></h3>
+		  <{foreach from=$vote.answer item=vitem}>
+			 <div><input type="radio" name="choice" value="<{$vitem.answer_id}>" id="<{$id}>_item_<{$vitem.answer_id}>" onchange="jQuery('#<{$id}> button').attr('disabled', false).css('opacity', '1.0'); jQuery('#<{$id}> form').submit();" onclick="jQuery('#<{$id}> form').submit();" /><label for="<{$id}>_item_<{$vitem.answer_id}>"><{$vitem.title}></label></div>
+		  <{/foreach}>
+		  <div><input type="hidden" name="question_id" value="<{$vote.question_id}>" />
+		  <button type="submit" disabled="disabled" style="opacity: 0.5;">Balsuoti</button>
+		  <button type="button" onclick="window.<{$id}>.execFunc('show_results');">Rodyti rezultatus</button></div>
+	  <{/control}>
+ <{/if}>
+<{else}>
+  Šiuo metu čia nevyksta jokie balsavimai :(
+<{/if}>

@@ -1,0 +1,117 @@
+<script type="text/javascript">
+	//<![CDATA[
+	var control_<{$id}>_steps = [];
+	var control_<{$id}>_index = 0;
+	jQuery(
+		function() {
+			control_<{$id}>_steps = jQuery('#<{$id}> .WizardstepControl').get();
+			if (control_<{$id}>_steps[0]) {
+				jQuery(control_<{$id}>_steps[0]).show();
+				if (control_<{$id}>_steps.length > 0) {
+					jQuery('#<{$id}>_bt_next').css({'display':''});
+				}
+			} else {
+				jQuery('#<{$id}>').html('Klaida: nėra nurodyti vedlio žingsniai.');
+			}
+		}
+	);
+	function control_<{$id}>_showHide(prev_id, next_id) {
+		var prv = jQuery(control_<{$id}>_steps[prev_id]);
+		var next = jQuery(control_<{$id}>_steps[next_id]);
+		var pos = prv.position();
+		if (!pos) {
+			pos = {left:null, top:null};
+		}
+		next.css({'position':'absolute', 'left':pos.left, 'top':pos.top, 'opacity':0, 'display':''});
+		prv.animate({opacity:0}, function() {prv.hide();} );
+		next.css({opacity:1});
+		var flags_current = control_<{$id}>_getSpecialFlags(next_id);
+		var flags_prev = control_<{$id}>_getSpecialFlags(prev_id);
+		if ((next_id == 0) || flags_prev.automove) {
+			jQuery('#<{$id}>_bt_back').css({'display':'none'});
+		} else if (prev_id == 0) {
+			jQuery('#<{$id}>_bt_back').css({'display':''});
+		}
+		if (next_id > (control_<{$id}>_steps.length-1)) {
+			jQuery('#<{$id}>_bt_next').css({'display':'none'});
+		} else if (next_id == (control_<{$id}>_steps.length-2)) {
+			jQuery('#<{$id}>_bt_next').css({'display':''});
+		}
+		control_<{$id}>_disable('#<{$id}>_bt_back', flags_current.disable_back);
+		if (flags_current.hidebuttons) {
+			jQuery('#<{$id}>_bt_back').hide();
+			jQuery('#<{$id}>_bt_next').hide();
+		}
+	}
+	function control_<{$id}>_getSpecialFlags(id) {
+		var tid = jQuery(control_<{$id}>_steps[id]).attr('id');
+		var sfobj = jQuery('#' +  tid + '_special_flags');
+		var rez = {disable_back:false, automove:false, hidebuttons:false};
+		if (!sfobj || !(sfobj.html())) return rez;
+		var code = sfobj.html() + ",";
+		var parts = code.split(',');
+		for(var i=0; i < parts.length; i++) {
+			parts[i] = jQuery.trim(parts[i]);
+			if (parts[i].length == 0) continue;
+			rez[parts[i]] = true;
+		}
+		return rez;
+	}
+	function control_<{$id}>_goNext() {
+		control_<{$id}>_showHide(control_<{$id}>_index, ++control_<{$id}>_index);
+		control_<{$id}>_disable('#<{$id}>_bt_next', true);
+		control_<{$id}>_waitUntilOk(control_<{$id}>_index);
+	}
+	function control_<{$id}>_goBack() {
+		control_<{$id}>_showHide(control_<{$id}>_index, --control_<{$id}>_index);
+		if (window.control_<{$id}>_timer) {
+			clearTimeout(window.control_<{$id}>_timer);
+			window.control_<{$id}>_timer = null;
+		}
+		control_<{$id}>_disable('#<{$id}>_bt_next', false);
+	}
+	function control_<{$id}>_disable(id, state) {
+		if (state) {
+			jQuery(id).attr('disabled', true);
+			jQuery(id).css({opacity:0.5});
+		} else {
+			jQuery(id).removeAttr("disabled");
+			jQuery(id).css({opacity:1});
+		}
+	}
+	function control_<{$id}>_waitUntilOk(id) {
+		var tid = jQuery(control_<{$id}>_steps[id]).attr('id');
+		var wait_for = jQuery('#' +  tid + '_validator_id');
+		if (!wait_for || !(wait_for.html())) {
+			return control_<{$id}>_disable('#<{$id}>_bt_next', false);
+		}
+		var wid = wait_for.text();
+		if (window.control_<{$id}>_prevState != window[wid].params.is_ok) {
+			control_<{$id}>_disable('#<{$id}>_bt_next', !window[wid].params.is_ok);
+			window.control_<{$id}>_prevState == window[wid].params.is_ok;
+		} 		
+		if (window[wid].params.is_ok && (control_<{$id}>_index == id) ) {
+			var flags = control_<{$id}>_getSpecialFlags(id);
+			if (flags.automove)	{
+				return control_<{$id}>_goNext();
+			}
+			if (flags.hidebuttons) {
+				if (!flags.disable_back) {
+					jQuery('#<{$id}>_bt_back').show();
+				}				
+				jQuery('#<{$id}>_bt_next').show();
+			}
+		}
+		if (!window.control_<{$id}>_timer) {
+			window.control_<{$id}>_timer = setInterval(function () {
+					control_<{$id}>_waitUntilOk(control_<{$id}>_index);
+				}, 210);
+		}
+	}
+	//]]>
+</script>
+<div class="title"><{$title}></div>
+<div class="content"><{$content}></div>
+<div class="bottom"><button type="button" id="<{$id}>_bt_back" style="display: none;" onclick="control_<{$id}>_goBack(); return false;">Atgal</button>
+<button type="button" id="<{$id}>_bt_next" style="display: none;" onclick="control_<{$id}>_goNext(); return false;">Toliau</button>
+</div>

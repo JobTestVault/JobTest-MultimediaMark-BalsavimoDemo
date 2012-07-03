@@ -1,0 +1,12 @@
+<{if $noquestion}>
+	Tokio balsavimo nėra!
+<{else}>
+	<h3><{$title}></h3>
+	<{if $count > 0}>
+	    <{control name="graph"}><{foreach from=$votes item=item}>
+		<{$item.title}> (<{$item.count}>; <{$item.percent}>%) <{$item.count}>
+		<{/foreach}><{/control}>
+	<{else}>
+		Šiuo metu dar nebuvo balsavusių
+	<{/if}>
+<{/if}>

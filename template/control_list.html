@@ -1,0 +1,56 @@
+<table border="1" style="width:100%;">
+	<tr>
+		<{foreach from=$items.columns key=item_key item=title}>
+			<{if $item_key != $items.id}>
+				<th>
+					<{$title}>
+				</th>
+			<{/if}>
+		<{/foreach}>
+		<th>
+			Veiksmai
+		</th>
+	</tr>
+	<{foreach from=$items.data item=item_data}>
+		<tr>
+			<{foreach from=$item_data key=item_key item=item_value}>
+				<{if $item_key != $items.id}>
+					<td>
+						<{if $items.fields[$item_key] == 'bool'}>
+							<{control name="change_state" var=$item_key object=$object item_id=$item_data[$items.id] onlyone=true /}>
+						<{else}>
+							<{$item_value}>
+						<{/if}>						
+					</td>
+				<{/if}>
+			<{/foreach}>
+			<td style="text-align: center;">				
+				<table border="0" cellspacing="0" style="text-align: center;">
+					<tr>
+						<td>
+							<{control name="delete_item" var=$item_key object=$object item_id=$item_data[$items.id] ids=$id /}>
+						</td>
+						<td>
+							<{control name="edit_item" var=$item_key object=$object item_id=$item_data[$items.id] /}>
+						</td>
+						<td>
+							<{control name="view_graph" var=$item_key object=$object item_id=$item_data[$items.id] /}>
+						</td>
+					</tr>
+				</table>								
+			</td>
+		</tr>
+	<{foreachelse}>
+		<tr>
+			<td colspan="<{$items.ccount+1}>">Šiuo metu nėra</td>
+		</tr>
+	<{/foreach}>
+</table>
+<div class="bottom">
+	<a href="index.php?area=admin&amp;action=edit&amp;<{$items.id}>=0">Pridėti</a>
+	Rodyti nuo: <select name="<{$id}>_show_from}>" id="<{$id}>_show_from" onchange="window.<{$id}>.execFunc('changePage', {page:jQuery(this).val()});">
+	<{foreach from=$items.pages item=ppage}>
+		<option value="<{$ppage}>"<{if $ppage==$page}> selected="selected"<{/if}>><{$ppage}></option>
+	<{/foreach}>
+	</select>
+</div>

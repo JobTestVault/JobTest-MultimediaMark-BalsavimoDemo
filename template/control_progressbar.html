@@ -1,0 +1,77 @@
+<div id="<{$id}>_pbar" style="border-style: solid; width: 90%; height: 21px; border-width: 1px; background-color: #E4E4E4;">
+	<div id="<{$id}>_pvalue" style="width: 0%; height:21px; background-color: lightgreen;"></div>
+</div>
+<div id="<{$id}>_percent" style="width: 90%; height:21px; margin-top: -21px; color: black; text-align: center; font-weight: bold;">0%</div>
+<{if !$control_isUpdate}>
+<script type="text/javascript">
+	//<![CDATA[
+	function control_<{$id}>_init() {
+		if (!window['<{$id}>'] || !window['<{$id}>'].execFunc) {
+			setTimeout(control_<{$id}>_init, 500);
+			return;
+		}
+		window['<{$id}>'].addTask = function(task_id) {
+			if (!window['<{$id}>'].tasks) {
+				window['<{$id}>'].tasks = [task_id];
+			} else {
+				window['<{$id}>'].tasks[window['<{$id}>'].tasks.length] = task_id;
+			}
+		}
+		window['<{$id}>'].setPercent = function (percent) {
+			jQuery('#<{$id}>_percent').html(percent + "%");
+			jQuery('#<{$id}>_pvalue').width(percent + "%");
+		}
+		window['<{$id}>'].updateStepInfo = function (step) {
+			window['<{$id}>'].setPercent(Math.round(100 / window['<{$id}>'].steps * step)); 
+		}
+		window['<{$id}>'].doNextStep = function() {		
+			window['<{$id}>'].updateStepInfo(window['<{$id}>'].current_step);			
+			if (window['<{$id}>'].current_step < window['<{$id}>'].tasks.length) {
+				var i = window['<{$id}>'].tasks[window['<{$id}>'].current_step];
+				window[i].execFunc('update', null, window['<{$id}>'].doNextStep);
+			} else if (window['<{$id}>'].current_step < window['<{$id}>'].steps) {
+				var i = window['<{$id}>'].current_step - window['<{$id}>'].tasks.length;
+				var tid = window['<{$id}>'].tasks[i];
+				var obj = window[tid];
+				var rez = {};
+				if (obj.params.ids) {
+					var ids = obj.params.ids + ',';
+					ids = ids.split(',');					
+					for(var o=0; o < ids.length; o++) {
+						if (ids[o]) {
+							rez[ids[o]] = jQuery('#' + ids[o]).find('input').val();
+						}						
+					}
+				}
+				var params = function() { return {base:window['<{$id}>'].params.control_data, data:rez}; };
+				obj.execFunc('doStep', params, window['<{$id}>'].doNextStep);
+			} else {
+				window['<{$id}>'].params.is_ok = true;
+			}
+			window['<{$id}>'].current_step++;
+		}
+		window['<{$id}>'].process = function() {
+			window['<{$id}>'].steps = window['<{$id}>'].tasks.length * 2;
+			window['<{$id}>'].current_step = 0;
+			window['<{$id}>'].params.is_ok = false;
+			window['<{$id}>'].doNextStep();
+		}
+		window.control_current_pbar = window['<{$id}>'];
+	};
+	control_<{$id}>_init();
+	//]]>
+</script>
+<{$content}>
+<script type="text/javascript">
+	//<![CDATA[
+		function control_<{$id}>_start() {
+			if (!window.control_current_pbar || jQuery('#<{$id}>').is(':hidden')) {
+				setTimeout(control_<{$id}>_start, 500);
+				return;
+			}
+			window.control_current_pbar.process();
+		};
+		control_<{$id}>_start();
+	//]]>
+</script>
+<{/if}>
