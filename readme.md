@@ -1,3 +1,5 @@
+![GitHub release](https://img.shields.io/github/release/MekDrop/JobTest-MultimediaMark-BalsavimoDemo.svg?maxAge=2592000) [![License](https://img.shields.io/github/license/MekDrop/JobTest-MultimediaMark-BalsavimoDemo.svg?maxAge=2592000)](License.txt)
+
 ﻿Sorry, everything in Lithuanian here. Use Google translate to read this text.
 
 -----
